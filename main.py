@@ -10,12 +10,12 @@ bot = telebot.TeleBot(API_TOKEN)
 sending_thread = None
 sending_active = False
 
-# Function to send "Hi" every 5 seconds
+# Function to send "Hi" every 1 minute
 def send_hi(chat_id):
     global sending_active
     while sending_active:
         bot.send_message(chat_id, "Hi")
-        time.sleep(5)
+        time.sleep(60)  # Wait for 1 minute
 
 # Start command handler
 @bot.message_handler(commands=['start'])
@@ -23,13 +23,13 @@ def start_sending(message):
     global sending_active, sending_thread
     if not sending_active:
         sending_active = True
-        bot.send_message(message.chat.id, "I will send 'Hi' every 5 seconds. Type /stop to stop me.")
+        bot.send_message(message.chat.id, "I will send 'Hi' every 1 minute. Type /stop to stop me.")
         
         # Start a new thread to send messages
         sending_thread = threading.Thread(target=send_hi, args=(message.chat.id,))
         sending_thread.start()
     else:
-        bot.send_message(message.chat.id, "I'm already sending 'Hi' every 5 seconds!")
+        bot.send_message(message.chat.id, "I'm already sending 'Hi' every 1 minute!")
 
 # Stop command handler
 @bot.message_handler(commands=['stop'])
